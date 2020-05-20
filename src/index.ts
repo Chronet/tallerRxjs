@@ -1,16 +1,21 @@
-import { of } from 'rxjs';
+import { fromEvent } from 'rxjs';
 
-// const obs$ = of(1,2,3,4,5,6);
-// const obs$ = of([1,2,3,4,5,6]); //Solo es un argumento, UN ARRAY
-const obs$ = of<number>(...[1,2,3,4,5,6],7,8); //eL .... SE LLAMA 'SPREAD' LOL
 
-/** Ejemplo de un any, no recomendado, mejor tipar */
-// const obs$ = of( [1,2], {a:1, b:2}, function(){}, true, Promise.resolve(true) );
+/**
+ * Eventos del DOM
+ */
+const src1$ = fromEvent<MouseEvent>( document, 'click');
+const src2$ = fromEvent<KeyboardEvent>( document, 'keyup');
 
-console.log('Begin Obs$')
-obs$.subscribe( 
-    next => console.log('next:', next),
-    null, //Ignora el error.
-    () => console.log('Finished sequelize')
-);
-console.log('Finish obs$');
+const observer = {
+    next: val => console.log('next', val)
+}
+
+src1$.subscribe( ({ x, y}) => {
+    console.log( x );
+    console.log( y );
+});
+
+src2$.subscribe( evento => {
+    console.log( evento.key );
+});
