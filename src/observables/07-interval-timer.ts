@@ -1,4 +1,3 @@
-// import {  } from 'rxjs';
 import { interval, timer } from 'rxjs';
 
 const observer = {
