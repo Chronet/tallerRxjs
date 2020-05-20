@@ -1,57 +1,16 @@
-import { Observable, Observer, Subject } from 'rxjs';
+import { of } from 'rxjs';
 
-const observer: Observer<any> = {
-    next: value => console.log('next: ', value ),
-    error: error => console.warn('error: ', error ),
-    complete: () => console.info('completed for observer')
-};
+// const obs$ = of(1,2,3,4,5,6);
+// const obs$ = of([1,2,3,4,5,6]); //Solo es un argumento, UN ARRAY
+const obs$ = of<number>(...[1,2,3,4,5,6],7,8); //eL .... SE LLAMA 'SPREAD' LOL
 
-/** Ventajas Observable
- * 1- Creacion de instancias separadas con mismos metodos.
- */
-const intervalo$ = new Observable<number>( subs => {
+/** Ejemplo de un any, no recomendado, mejor tipar */
+// const obs$ = of( [1,2], {a:1, b:2}, function(){}, true, Promise.resolve(true) );
 
-
-    // Ojo interval en vez de timeout
-    const intervalID = setInterval( () => {
-       subs.next( Math.random() )
-    }, 1000);
-
-    return () => {
-        clearInterval( intervalID );
-        console.log('Intervalo destruido');
-    }
-
-});
-
-/**  Ventajas del subject
- * 1- Casteo múltiple, muchas suscripcion misma informacion.
- * 2- También es un observer
- * 3- Next, error y complete
- */
-const subject$ = new Subject();
-intervalo$.subscribe( subject$ ); //Enlaza el subject
-
-
-/** Ejmplo visualizado de ventajas observable */
-// const subs1 = intervalo$.subscribe( rnd => console.log( 'subs1', rnd ) );
-// const subs2 = intervalo$.subscribe( rnd => console.log( 'subs2', rnd ) );
-
-
-/** Ejemplo visualizado de ventajas subject */
-const subs1 = subject$.subscribe( observer );
-const subs2 = subject$.subscribe( observer );
-
-setTimeout(() => {
-
-    subject$.next(10);
-
-    subject$.complete();
-    /** Aunque ejecute el complete, la instancia, osea subs 1 y 2 siguen corriendo
-     *  (el interval) ,
-     *  Para destruirlas por completo, se necesita el unsuscribe, ahí, radica la 
-     *  diferencia.
-     */
-    subject$.unsubscribe();
-
-}, 3500);
+console.log('Begin Obs$')
+obs$.subscribe( 
+    next => console.log('next:', next),
+    null, //Ignora el error.
+    () => console.log('Finished sequelize')
+);
+console.log('Finish obs$');
