@@ -1,13 +1,22 @@
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 
+const observer: Observer<any> = {
+    next: value => console.log('siguiente [next]:', value ),
+    error: error => console.warn('error [obs]:', error ),
+    complete: () => console.info('Completado [obs]')
+};
 
 // const obs$ = Observable.create();  // Posible forma de crear un observable, Poco usada;
-const obs$ = new Observable( subs => {
+const obs$ = new Observable<string>( subs => {
 
     subs.next('Hola');
     subs.next('Mundo');
     subs.next('Hola');
     subs.next('Navegador');
+
+    // Forzar un error;
+    // const a  = undefined;
+    // a.nombre = 'Jairo';
 
     subs.complete();
 
@@ -16,5 +25,11 @@ const obs$ = new Observable( subs => {
 
 });
 
-obs$.subscribe( console.log )
+obs$.subscribe( observer );
+
+// obs$.subscribe(  
+//     valor => console.log('Next: ', valor),
+//     error => console.warn('Error: ', error),
+//     () => console.info('Finished') 
+// );
 
